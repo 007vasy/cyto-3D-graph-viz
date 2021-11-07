@@ -21,20 +21,37 @@ converted_info_json = {
   links: [],
 };
 
+nodes_to_remove = [];
 info_json.elements.nodes.forEach((node) => {
-  converted_info_json.nodes.push({
-    id: node.data.id,
-    name: node.data.name,
-    category: node.data.category,
-  });
+  if (node.data.category == 0) {
+    nodes_to_remove.push(node.data.id);
+  }
+});
+
+info_json.elements.nodes.forEach((node) => {
+  if (!nodes_to_remove.includes(node.data.id)) {
+    converted_info_json.nodes.push({
+      id: node.data.id,
+      name: node.data.name,
+      category: node.data.category,
+      visibility: node.data.category != 0,
+    });
+  }
 });
 
 info_json.elements.edges.forEach((edge) => {
-  converted_info_json.links.push({
-    id: edge.data.id,
-    source: edge.data.source,
-    target: edge.data.target,
-  });
+  if (
+    !(
+      nodes_to_remove.includes(edge.data.source) ||
+      nodes_to_remove.includes(edge.data.target)
+    )
+  ) {
+    converted_info_json.links.push({
+      id: edge.data.id,
+      source: edge.data.source,
+      target: edge.data.target,
+    });
+  }
 });
 
 function uniqByKeepFirst(a, key) {
