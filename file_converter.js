@@ -21,6 +21,22 @@ converted_info_json = {
   links: [],
 };
 
+info_json.elements.nodes.forEach((node) => {
+  converted_info_json.nodes.push({
+    id: node.data.id,
+    name: node.data.name,
+    category: node.data.category,
+  });
+});
+
+info_json.elements.edges.forEach((edge) => {
+  converted_info_json.links.push({
+    id: edge.data.id,
+    source: edge.data.source,
+    target: edge.data.target,
+  });
+});
+
 function uniqByKeepFirst(a, key) {
   let seen = new Set();
   return a.filter((item) => {
